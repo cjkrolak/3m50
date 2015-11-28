@@ -1,46 +1,21 @@
 import TStat
-import API
 
 import sys
-import time
+
 
 taddr = '192.168.1.106'  # home
+taddr = '173.19.242.234'  # home remote
+port = 83
 taddr = '192.168.254.24'  # cabin 1
 taddr = '192.168.254.42'  # cabin 2
 connect_attempts = 1
 
 
-def Connect_radiotherm(taddr):
-    # tstat = radiotherm.get_thermostat('192.168.0.2')
-    print "establishing connection with 3m50 at %s...\n" % taddr
-    tstat = radiotherm.get_thermostat(taddr)
-    print "current model...%s" % tstat.model
-    print "current version...%s" % tstat.version
-    print "current time...%s\n" % tstat.time
-
-    print "current temp...%s" % tstat.temp
-    print "current setpoint...%s" % tstat.t_heat
-    print "it_heat...%s" % tstat.it_heat
-    print "current mode...%s" % tstat.tmode
-    print "current temp state...%s\n" % tstat.tstate
-
-    print "fan mode...%s" % tstat.fmode
-    print "fan state...%s" % tstat.fstate
-    return tstat
-
-
-def Reboot_radiotherm(tstat, dly=30):
-    print "rebooting thermostat, wait %d seconds..." % dly
-    tstat.reboot()
-    time.sleep(dly)
-    print "reboot done"
-
-
-def Connect_Tstat(taddr):
+def Connect_Tstat(taddr, port=80):
     ' connect using Python-TStat API'
-    print "establishing connection with 3m50 at %s...\n" % taddr
+    print "establishing connection with 3m50 at %s port %d...\n" % (taddr, port)
     # tstat = TStat.TStat(taddr, api=API.API_CT30v192(), logger=None)
-    tstat = TStat.TStat(taddr, logger=None)
+    tstat = TStat.TStat(taddr, port, logger=None)
 
     print "thermostat version info:"
     print "current model...%s" % tstat.getModel()
