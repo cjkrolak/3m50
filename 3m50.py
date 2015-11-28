@@ -5,7 +5,9 @@ import API
 
 import time
 
-taddr = '192.168.1.106'
+taddr = '192.168.1.106'  # home
+taddr = '192.168.254.24'  # cabin 1
+taddr = '192.168.254.42'  # cabin 2
 connect_attempts = 1
 
 
@@ -38,7 +40,8 @@ def Reboot_radiotherm(tstat, dly=30):
 def Connect_Tstat(taddr):
     ' connect using Python-TStat API'
     print "establishing connection with 3m50 at %s...\n" % taddr
-    tstat = TStat.TStat(taddr, api=API.API_CT30v192(), logger=None)
+    # tstat = TStat.TStat(taddr, api=API.API_CT30v192(), logger=None)
+    tstat = TStat.TStat(taddr, logger=None)
 
     print "current model...%s" % tstat.getModel()
     print "current version...%s" % tstat.getVersion()
@@ -46,7 +49,7 @@ def Connect_Tstat(taddr):
     print "current time...%s" % tstat.getTime()
     print "current wifi security...%s" % tstat.getSecurity()
     # print "current night light status...%s" % tstat.getNightLight()
-    print "\n"    
+    print "\n"
 
     print "current temp...%s" % tstat.getCurrentTemp()
     print "current setpoint...%s" % tstat.getHeatPoint()
