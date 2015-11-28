@@ -5,9 +5,10 @@ import sys
 
 taddr = '192.168.1.106'  # home
 taddr = '173.19.242.234'  # home remote
-port = 83
-taddr = '192.168.254.24'  # cabin 1
-taddr = '192.168.254.42'  # cabin 2
+port = 80
+taddr = '192.168.254.24'  # cabin basement
+# taddr = '192.168.254.42'  # cabin main level
+
 connect_attempts = 1
 
 
@@ -18,28 +19,46 @@ def Connect_Tstat(taddr, port=80):
     tstat = TStat.TStat(taddr, port, logger=None)
 
     print "thermostat version info:"
+    print "current name...%s" % tstat.getName()
     print "current model...%s" % tstat.getModel()
-    print "current version...%s" % tstat.getVersion()
+    print "current thermostat api version...%s" % tstat.getVersion()
+    print "current UUID...%s" % tstat.getUuid()
+    print "current system api version...%s" % tstat.getAPIVersion()
+    print "current fw version...%s" % tstat.getFwVersion()
+    print "current wlan fw version...%s" % tstat.getWlanFwVersion()
     print "current mode...%s" % tstat.getMode()
     print "current time...%s" % tstat.getTime()
+    #  print "current lock mode...%s" % tstat.getLockMode()  returns -1
+
+    print "\nNetwork info:"
+    # print "current wifi network...%s" % tstat.getNetwork()
+    print "current wifi ssid...%s" % tstat.getSsid()
+    print "current wifi bssid...%s" % tstat.getBssid()
+    print "current wifi ip...%s" % tstat.getIP()
+    print "current wifi rssi...%s dB" % tstat.getRssi()
     print "current wifi security...%s" % tstat.getSecurity()
-    # print "current night light status...%s" % tstat.getNightLight()
+    print "current wifi channel...%s" % tstat.getChannel()
+    # print "current night light status...%s" % tstat.getNightLight()  # hangs on this command
     print "\n"
     print "current settings:"
-    print "current temp...%s" % tstat.getCurrentTemp()
+    print "current temp...%s deg F" % tstat.getCurrentTemp()
     print "current setpoint...%s" % tstat.getHeatPoint()
+    print "current override...%s" % tstat.getOverride()
     print "current holdstate...%s" % tstat.getHoldState()
     print "current Power...%s" % tstat.getPower()
-    # print "it_heat...%s" % tstat.it_heat
+    # print "t_heat...%s" % tstat.getT_heat()
+    print "temporary heat setpoint...%s" % tstat.getIT_heat()
     print "current mode...%s" % tstat.getTstatMode()
-    print "current temp state...%s\n" % tstat.getTState()
-
-    print "yesterday heat usage...%s" % tstat.getHeatUsageYesterday()
-    print "Today heat usage...%s\n" % tstat.getHeatUsageToday()
+    print "current temp state...%s" % tstat.getTState()
 
     print "fan mode...%s" % tstat.getFanMode()
     print "fan state...%s\n" % tstat.getFanState()
 
+    print "\nRecent usage:"
+    print "yesterday heat usage...%s" % tstat.getHeatUsageYesterday()
+    print "Today heat usage...%s\n" % tstat.getHeatUsageToday()
+
+    print "Thermostat Status:"
     print "Thermostat is OK?...%s" % tstat.isOK()
     print "Thermostat Error...%s" % tstat.getErrStatus()
     return tstat
@@ -76,7 +95,7 @@ def interactive_TStat(TStat):
                 print "\nparse error in string '%s', 'set' method requires 2 parameters, exiting..." % key_input
                 sys.exit(-1)
             print "\nparam '%s' was set to: %s, changing to: %s" % (param, TStat._get(param), valu)
-            TStat._set(param, valu)
+            TStat._post(param, valu)
             print "\nparam '%s' returns: %s" % (param, TStat._get(param))
         elif method == 'esc':
             print "\nescape sequence detected, exiting interactive mode..."
@@ -86,7 +105,7 @@ def interactive_TStat(TStat):
 if __name__ == "__main__":
     # tstat1 = Connect_radiotherm(taddr)
 
-    tstat1 = Connect_Tstat(taddr)
+    tstat1 = Connect_Tstat(taddr, port)
     interactive_TStat(tstat1)
 
     # Reboot(tstat1)
